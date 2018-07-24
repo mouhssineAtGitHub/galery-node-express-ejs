@@ -31,7 +31,7 @@ const imgExtPattern = /\.(jpg|jpeg|png|gif)$/;
 const uploadDirectory = __dirname + "/views/assets/images";
 
 //-->App
-const port = 8081;
+const port = process.env.PORT || 8081;
 
 // Creat multer disk storage
 const Storage = multer.diskStorage({
