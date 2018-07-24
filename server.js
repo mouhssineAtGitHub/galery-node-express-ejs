@@ -35,10 +35,10 @@ const port = process.env.PORT || 8081;
 
 // Creat multer disk storage
 const Storage = multer.diskStorage({
-  destination: function(req, file, callback) {
+  destination: (req, file, callback) => {
     callback(null, uploadDirectory);
   },
-  filename: function(req, file, callback) {
+  filename: (req, file, callback) => {
     const newPictureImgName =
       req.body.firstName + "." + file.originalname.split(".", 2)[1];
     req.body.src = newPictureImgName;
@@ -52,7 +52,7 @@ const Storage = multer.diskStorage({
 const upload = multer({
   storage: Storage,
   limits: { fileSize: maxSize },
-  fileFilter: function(req, file, cb) {
+  fileFilter: (req, file, cb) => {
     if (!file.originalname.match(imgExtPattern)) {
       console.log("file:", file.originalname);
       return cb(new Error("Only image files are allowed!"));
@@ -175,7 +175,7 @@ app.get("/delete/:tabIndex", function(req, res) {
     req.params.tabIndex <= studentsObj.students.length - 1
   ) {
     
-    fs.unlink(linkToImg, function(err) {
+    fs.unlink(linkToImg, (err) => {
       //Delete image from images folder
     if (err) res.render("pages/delete", { message: "File deleted!" });
     });
@@ -188,7 +188,7 @@ app.get("/delete/:tabIndex", function(req, res) {
 });
 
 //Contact page
-app.get("/contact", function(req, res) {
+app.get("/contact", (req, res) => {
   res.render("pages/contact");
 });
 
@@ -221,7 +221,7 @@ app.post("/contactConfirmation", (req, res) => {
     html: "<p>" + info + "</p>"
   };
 
-  transporter.sendMail(mailOptions, function(error, info) {
+  transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       res.render("pages/contactConfirmation", {
         message: " Error: email sending fails!"
