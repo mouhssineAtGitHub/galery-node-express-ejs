@@ -18,6 +18,7 @@ const app = express();
 app.set("view engine", "ejs");
 
 app.use(express.static("views"));
+app.use(express.static(__dirname + "/views/assets"));
 
 app.use(bodyParser.json()); // support json encoded bodies
 
@@ -80,20 +81,18 @@ app.get("/add", (req, res) => {
 app.post("/addConfirmation", (req, res) => {
   upload(req, res, function(err) {
     if (err) {
-
       return res.render("pages/addConfirmation", {
         message: "Error: Student not added and image not uploaded"
       });
-
     }
 
-      delete req.body.studentPicture;
-      req.body.skills = req.body.skills.split(",");
-      studentsObj.students.unshift(req.body);           
-      return res.render("pages/addConfirmation", {
-        message:
-          "Success: New Student Added successfully and image uploaded to server..."
-      });
+    delete req.body.studentPicture;
+    req.body.skills = req.body.skills.split(",");
+    studentsObj.students.unshift(req.body);
+    return res.render("pages/addConfirmation", {
+      message:
+        "Success: New Student Added successfully and image uploaded to server..."
+    });
   });
 });
 
@@ -134,31 +133,24 @@ app.post("/updateConfirmation", function(req, res) {
 });
 
 // change picture page
-app.get("/changePicture/:tabIndex", (req,res) =>{
+app.get("/changePicture/:tabIndex", (req, res) => {
   res.render("pages/changePicture");
 });
 
 //Change Picture confirmation page
-app.post("/changePictureConfirmation", (req,res) =>{
+app.post("/changePictureConfirmation", (req, res) => {
   upload(req, res, function(err) {
     if (err) {
-
       return res.render("pages/changePictureConfirmation", {
         message: "Error: Image not uploaded.."
       });
-
     }
 
-             
     return res.render("pages/chnagePictureConfirmation", {
-        message:
-          "Success: New Image  uploaded successfully to server.."
-      });
+      message: "Success: New Image  uploaded successfully to server.."
+    });
   });
-
 });
-
-
 
 //Delete page
 app.get("/delete/:tabIndex", function(req, res) {
@@ -174,17 +166,14 @@ app.get("/delete/:tabIndex", function(req, res) {
     req.params.tabIndex >= 0 &&
     req.params.tabIndex <= studentsObj.students.length - 1
   ) {
-    
-    fs.unlink(linkToImg, (err) => {
+    fs.unlink(linkToImg, err => {
       //Delete image from images folder
-    if (err) res.render("pages/delete", { message: "File deleted!" });
+      if (err) res.render("pages/delete", { message: "File deleted!" });
     });
-  
+
     studentsObj.students.splice(Number(req.params.tabIndex), 1);
     res.render("pages/delete", { message: "Success: Student deleted" });
   }
-
-  
 });
 
 //Contact page
